@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { CircularProgressBar } from './components/CircularProgressBar';
 
 interface TIMER_STATES {
@@ -19,12 +19,14 @@ const workout_details = {
   hangtime: 7,
   resttime: 3,
   breaktime: 60,
-  totalSets: 3,
-  reps: 6,
+  totalSets: 1,
+  reps: 3,
 };
 
 export default function App() {
   const [timer_state, setTimerState] = useState({ ...countdownActive });
+  const [currentSet, setCurrentSet] = useState(1);
+  const [currentRep, setCurrentRep] = useState(0);
 
   function nextState(prevState: string, nextState: string) {
     setTimerState((prev: TIMER_STATES) => {
@@ -38,33 +40,53 @@ export default function App() {
   return (
     <View style={styles.container}>
       {timer_state.countdown && (
-        <CircularProgressBar
-          setDone={() => {
-            nextState('countdown', 'hangTime');
-          }}
-          workout_details={workout_details}
-          duration={workout_details.countdown}
-        />
+        <View style={{ backgroundColor: 'yellow', width: 300 }}>
+          <Text>Countdown</Text>
+          <CircularProgressBar
+            setDone={() => {
+              nextState('countdown', 'hangTime');
+            }}
+            workout_details={workout_details}
+            duration={workout_details.countdown}
+          />
+        </View>
       )}
       {timer_state.hangTime && (
-        <CircularProgressBar
-          color="blue"
-          setDone={() => {
-            nextState('hangTime', 'restTime');
+        <View
+          style={{
+            backgroundColor: 'green',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
           }}
-          workout_details={workout_details}
-          duration={workout_details.hangtime}
-        />
+        >
+          <View style={{ alignItems: 'center' }}>
+            <Text>Hang!</Text>
+          </View>
+          <View>
+            <CircularProgressBar
+              color="blue"
+              setDone={() => {
+                nextState('hangTime', 'restTime');
+              }}
+              workout_details={workout_details}
+              duration={workout_details.hangtime}
+            />
+          </View>
+        </View>
       )}
       {timer_state.restTime && (
-        <CircularProgressBar
-          color="green"
-          setDone={() => {
-            nextState('restTime', 'hangTime');
-          }}
-          workout_details={workout_details}
-          duration={workout_details.resttime}
-        />
+        <View style={{ backgroundColor: 'orange', flex: 1 }}>
+          <Text>Rest!</Text>
+          <CircularProgressBar
+            color="green"
+            setDone={() => {
+              nextState('restTime', 'hangTime');
+            }}
+            workout_details={workout_details}
+            duration={workout_details.resttime}
+          />
+        </View>
       )}
     </View>
   );
