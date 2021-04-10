@@ -20,14 +20,6 @@ export function CircularProgressBar(props: any) {
   const delay = 0;
   const max = 100;
   const textColor = 'blue';
-  const workout_details = {
-    countdown: 10,
-    hangtime: 7,
-    resttime: 3,
-    breaktime: 60,
-    totalSets: 3,
-    reps: 6,
-  };
   const halfCircle = radius + strokeWidth;
   const circleCircumference = 2 * Math.PI * radius;
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -44,7 +36,7 @@ export function CircularProgressBar(props: any) {
   };
 
   useEffect(() => {
-    animation(percentage, workout_details.countdown);
+    animation(percentage, props?.duration);
 
     animatedValue.addListener((v) => {
       if (circleRef?.current) {
