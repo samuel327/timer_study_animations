@@ -60,7 +60,7 @@ export default function App() {
             justifyContent: 'center',
           }}
         >
-          <View style={{ alignItems: 'center' }}>
+          <View style={{ marginBottom: 25, alignItems: 'center' }}>
             <Text>Hang!</Text>
           </View>
           <View>
@@ -76,16 +76,27 @@ export default function App() {
         </View>
       )}
       {timer_state.restTime && (
-        <View style={{ backgroundColor: 'orange', flex: 1 }}>
-          <Text>Rest!</Text>
-          <CircularProgressBar
-            color="green"
-            setDone={() => {
-              nextState('restTime', 'hangTime');
-            }}
-            workout_details={workout_details}
-            duration={workout_details.resttime}
-          />
+        <View
+          style={{
+            backgroundColor: 'orange',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+          }}
+        >
+          <View style={{ marginBottom: 25, alignItems: 'center' }}>
+            <Text>Rest!</Text>
+          </View>
+          <View>
+            <CircularProgressBar
+              color="green"
+              setDone={() => {
+                nextState('restTime', 'hangTime');
+              }}
+              workout_details={workout_details}
+              duration={workout_details.resttime}
+            />
+          </View>
         </View>
       )}
     </View>
