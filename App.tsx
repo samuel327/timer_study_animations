@@ -21,7 +21,7 @@ const workout_details = {
   hangtime: 7,
   resttime: 3,
   breaktime: 60,
-  totalSets: 1,
+  totalSets: 2,
   reps: 3,
 };
 
@@ -29,6 +29,7 @@ export default function App() {
   const [timer_state, setTimerState] = useState({ ...countdownActive });
   const [currentSet, setCurrentSet] = useState(1);
   const [currentRep, setCurrentRep] = useState(0);
+  const [complete, setComplete] = useState(false);
 
   function nextState(prevState: string, nextState: string) {
     setTimerState((prev: TIMER_STATES) => {
@@ -37,6 +38,26 @@ export default function App() {
       updated[nextState] = true;
       return updated;
     });
+  }
+
+  function determineNextState(prev: string, next: string) {
+    // setCurrentRep((prev: number) => prev + 1);
+    if (currentRep + 1 > workout_details.reps) {
+      if (currentSet + 1 > workout_details.totalSets) {
+        setComplete(true);
+        //no need to proceed to next step
+      } else {
+        setCurrentSet((prev: number) => prev + 1);
+        setCurrentRep(1);
+        nextState(prev, 'breakTime');
+      }
+    } else {
+      if (next === 'hangTime') {
+        setCurrentRep((prev: number) => prev + 1);
+      }
+
+      nextState(prev, next);
+    }
   }
 
   function displayHeaderAndCircle(
@@ -55,7 +76,7 @@ export default function App() {
           <CircularProgressBar
             color={color}
             setDone={() => {
-              nextState(prev, next);
+              determineNextState(prev, next);
             }}
             workout_details={workout_details}
             duration={duration}
@@ -67,6 +88,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      {complete && <Text>COMPLETE!</Text>}
       {timer_state.countdown &&
         displayHeaderAndCircle(
           'Get Ready',
@@ -87,7 +109,7 @@ export default function App() {
         displayHeaderAndCircle(
           'Rest.',
           'restTime',
-          'breakTime',
+          'hangTime',
           workout_details.resttime,
           'grey'
         )}
@@ -99,6 +121,37 @@ export default function App() {
           workout_details.breaktime,
           'purple'
         )}
+      <View
+        style={{
+          backgroundColor: 'grey',
+          width: '100%',
+          height: 200,
+          borderRadius: 5,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flex: 1,
+          }}
+        >
+          <Text>{`${currentSet} / ${workout_details.totalSets}`}</Text>
+          <Text>{`${currentRep} / ${workout_details.reps}`}</Text>
+        </View>
+
+        {complete && (
+          <View style={{ flex: 2 }}>
+            <Text style={{ textAlign: 'center' }}>COMPLETE!</Text>
+          </View>
+        )}
+        {!complete && (
+          <View style={{ flex: 2 }}>
+            <Text style={{ textAlign: 'center' }}>Workout In-Progress!</Text>
+          </View>
+        )}
+      </View>
     </View>
   );
 }

@@ -60,24 +60,24 @@ export function CircularProgressBar(props: any) {
         height={radius * 2}
         viewBox={`0 0 ${halfCircle * 2} ${halfCircle * 2}`}
       >
-        <G rotation="-90" origin={`${halfCircle}, ${halfCircle}`}>
+        <G rotation='-90' origin={`${halfCircle}, ${halfCircle}`}>
           <Circle
-            cx="50%"
-            cy="50%"
+            cx='50%'
+            cy='50%'
             stroke={color}
             strokeWidth={strokeWidth}
             r={radius}
-            fill="transparent"
+            fill='transparent'
             strokeOpacity={0.2}
           />
           <AnimatedCircle
             ref={circleRef}
-            cx="50%"
-            cy="50%"
+            cx='50%'
+            cy='50%'
             stroke={color}
             strokeWidth={strokeWidth}
             r={radius}
-            fill="transparent"
+            fill='transparent'
             strokeDasharray={circleCircumference}
             strokeDashoffset={circleCircumference}
             strokeLinecap={'round'}
