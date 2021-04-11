@@ -75,9 +75,6 @@ export default function App() {
   ) {
     return (
       <View style={styles.stateView}>
-        <View style={styles.headerView}>
-          <Text>{title}</Text>
-        </View>
         <View>
           <CircularProgressBar
             color={color}
@@ -88,6 +85,7 @@ export default function App() {
             duration={duration}
             hasStarted={hasStarted}
             isPaused={isPaused}
+            title={title}
           />
         </View>
       </View>
@@ -137,7 +135,15 @@ export default function App() {
           borderRadius: 5,
         }}
       >
-        <View style={{ flexDirection: 'row' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+
+            justifyContent: 'center',
+            marginVertical: 10,
+          }}
+        >
           <Button
             title='Start'
             onPress={() => {
@@ -145,17 +151,7 @@ export default function App() {
               setIsPaused(false);
             }}
           />
-          <Button
-            title='Restart'
-            onPress={() => {
-              setHasStarted(true);
-              setCurrentRep(0);
-              setCurrentSet(1);
-              setComplete(false);
-              setIsPaused(false);
-              reset();
-            }}
-          />
+
           <Button
             title='Pause'
             onPress={() => {
@@ -205,5 +201,4 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
   },
-  headerView: { marginBottom: 25, alignItems: 'center' },
 });

@@ -13,7 +13,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export function CircularProgressBar(props: any) {
   const [percentage, setPercentage] = useState<number>(100);
-  const radius = 40;
+  const radius = 100;
   const strokeWidth = 10;
   const duration = 500;
   const color = props.color || 'red';
@@ -62,13 +62,14 @@ export function CircularProgressBar(props: any) {
       });
     }
 
-    // return () => {
-    //   animatedValue.removeAllListeners();
-    // };
+    return () => {
+      animatedValue.removeAllListeners();
+    };
   }, [props.hasStarted, props.isPaused]);
 
   return (
     <View style={styles.container}>
+      {props?.title && <Text>{props.title}</Text>}
       <Svg
         width={radius * 2}
         height={radius * 2}
@@ -98,17 +99,32 @@ export function CircularProgressBar(props: any) {
           />
         </G>
       </Svg>
+      <TextInput
+        underlineColorAndroid='transparent'
+        editable={false}
+        defaultValue={'0'}
+        style={[
+          StyleSheet.absoluteFillObject,
+          {
+            fontSize: radius / 2,
+            color: textColor ?? 'blue',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          },
+        ]}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
     width: '100%',
     height: '100%',
   },
+  txtInput: {},
 });
