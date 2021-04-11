@@ -7,11 +7,13 @@ interface TIMER_STATES {
   countdown: boolean;
   hangTime: boolean;
   restTime: boolean;
+  breakTime: boolean;
 }
 const countdownActive: TIMER_STATES = {
   countdown: true,
   hangTime: false,
   restTime: false,
+  breakTime: false,
 };
 
 const workout_details = {
@@ -83,11 +85,19 @@ export default function App() {
         )}
       {timer_state.restTime &&
         displayHeaderAndCircle(
-          'Rest',
+          'Rest.',
           'restTime',
-          'hangTime',
+          'breakTime',
           workout_details.resttime,
           'grey'
+        )}
+      {timer_state.breakTime &&
+        displayHeaderAndCircle(
+          'Take a break!',
+          'breakTime',
+          'countdown',
+          workout_details.breaktime,
+          'purple'
         )}
     </View>
   );
