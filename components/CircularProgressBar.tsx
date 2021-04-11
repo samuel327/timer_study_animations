@@ -36,22 +36,25 @@ export function CircularProgressBar(props: any) {
   };
 
   useEffect(() => {
-    animation(percentage, props?.duration);
+    if (props.hasStarted) {
+      animation(percentage, props?.duration);
 
-    animatedValue.addListener((v) => {
-      if (circleRef?.current) {
-        const maxPerc = (100 * v.value) / max;
-        const strokeDashoffset =
-          circleCircumference - (circleCircumference * maxPerc) / 100;
-        circleRef.current.setNativeProps({
-          strokeDashoffset,
-        });
-      }
-    });
+      animatedValue.addListener((v) => {
+        if (circleRef?.current) {
+          const maxPerc = (100 * v.value) / max;
+          const strokeDashoffset =
+            circleCircumference - (circleCircumference * maxPerc) / 100;
+          circleRef.current.setNativeProps({
+            strokeDashoffset,
+          });
+        }
+      });
+    }
+
     return () => {
       animatedValue.removeAllListeners();
     };
-  }, []);
+  }, [props.hasStarted]);
 
   return (
     <View style={styles.container}>

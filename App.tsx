@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Button } from 'react-native';
 import { CircularProgressBar } from './components/CircularProgressBar';
 
 interface TIMER_STATES {
@@ -29,6 +29,7 @@ export default function App() {
   const [timer_state, setTimerState] = useState({ ...countdownActive });
   const [currentSet, setCurrentSet] = useState(1);
   const [currentRep, setCurrentRep] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
   const [complete, setComplete] = useState(false);
 
   function nextState(prevState: string, nextState: string) {
@@ -80,6 +81,7 @@ export default function App() {
             }}
             workout_details={workout_details}
             duration={duration}
+            hasStarted={hasStarted}
           />
         </View>
       </View>
@@ -125,10 +127,11 @@ export default function App() {
         style={{
           backgroundColor: 'grey',
           width: '100%',
-          height: 200,
+          height: 500,
           borderRadius: 5,
         }}
       >
+        <Button title='Start' onPress={() => setHasStarted(true)} />
         <View
           style={{
             flexDirection: 'row',
