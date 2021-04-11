@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
 } from 'react-native';
+import { Audio } from 'expo-av';
 import Svg, { Circle, G } from 'react-native-svg';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
@@ -27,6 +28,9 @@ export function CircularProgressBar(props: any) {
   const animatedValue = useRef(new Animated.Value(0)).current;
   const circleRef = useRef<any>();
   const timer = useRef<any>(null);
+
+  /*sounds*/
+  const [beep_G2, setBeepG2] = useState<any>();
   const animation = (toValue: any, duration: number) => {
     return Animated.timing(animatedValue, {
       toValue,
@@ -60,6 +64,7 @@ export function CircularProgressBar(props: any) {
       animatedValue.stopAnimation((e) => {
         console.log(e, 'line 58');
         // setPercentage(e);
+        clearInterval(timer.current);
       });
     }
 
