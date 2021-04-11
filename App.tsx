@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Button } from 'react-native';
 import { CircularProgressBar } from './components/CircularProgressBar';
 import { Audio } from 'expo-av';
+import { EditModal } from './components/EditModal';
 interface TIMER_STATES {
   [x: string]: boolean;
   countdown: boolean;
@@ -16,7 +17,17 @@ const countdownActive: TIMER_STATES = {
   breakTime: false,
 };
 
-const workout_details = {
+export interface Workout_Details_Props {
+  [x: string]: number;
+  countdown: number;
+  hangtime: number;
+  resttime: number;
+  breaktime: number;
+  totalSets: number;
+  reps: number;
+}
+
+const workout_details: Workout_Details_Props = {
   countdown: 10,
   hangtime: 7,
   resttime: 3,
@@ -27,17 +38,22 @@ const workout_details = {
 
 export default function App() {
   const [timer_state, setTimerState] = useState({ ...countdownActive });
+  const [workoutDetails, setWorkoutDetails] = useState<Workout_Details_Props>({
+    ...workout_details,
+  });
   const [currentSet, setCurrentSet] = useState(1);
   const [currentRep, setCurrentRep] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [complete, setComplete] = useState(false);
+  const [visible, setVisible] = useState(false);
   /*sounds*/
   const [beep_G2, setBeepG2] = useState<any>();
   useEffect(() => {
     console.log('GET G2!');
     getG2();
-  }, []);
+    console.log('APP: ', workoutDetails);
+  }, [workoutDetails]);
 
   async function getG2() {
     console.log('loading g2');
@@ -56,6 +72,12 @@ export default function App() {
     }
   }
 
+  function toggleModal() {
+    setIsPaused(true);
+    setHasStarted(false);
+    setVisible(!visible);
+  }
+
   function nextState(prevState: string, nextState: string) {
     setTimerState((prev: TIMER_STATES) => {
       let updated = { ...prev };
@@ -71,8 +93,8 @@ export default function App() {
 
   function determineNextState(prev: string, next: string) {
     // setCurrentRep((prev: number) => prev + 1);
-    if (currentRep + 1 > workout_details.reps) {
-      if (currentSet + 1 > workout_details.totalSets) {
+    if (currentRep + 1 > workoutDetails.reps) {
+      if (currentSet + 1 > workoutDetails.totalSets) {
         setComplete(true);
         //no need to proceed to next step
       } else {
@@ -96,24 +118,27 @@ export default function App() {
     duration: number,
     color: string
   ) {
-    return (
-      <View style={styles.stateView}>
-        <View>
-          <CircularProgressBar
-            color={color}
-            setDone={() => {
-              determineNextState(prev, next);
-            }}
-            workout_details={workout_details}
-            duration={duration}
-            hasStarted={hasStarted}
-            isPaused={isPaused}
-            title={title}
-            playG2={playG2}
-          />
+    if (workoutDetails) {
+      return (
+        <View style={styles.stateView}>
+          <View>
+            <CircularProgressBar
+              color={color}
+              setDone={() => {
+                determineNextState(prev, next);
+              }}
+              workout_details={workoutDetails}
+              duration={duration}
+              //duration={workoutDetails[next]}
+              hasStarted={hasStarted}
+              isPaused={isPaused}
+              title={title}
+              playG2={playG2}
+            />
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   }
 
   return (
@@ -124,7 +149,7 @@ export default function App() {
           'Get Ready',
           'countdown',
           'hangTime',
-          workout_details.countdown,
+          workoutDetails.countdown,
           'red'
         )}
       {timer_state.hangTime &&
@@ -132,7 +157,7 @@ export default function App() {
           'Hang!',
           'hangTime',
           'restTime',
-          workout_details.hangtime,
+          workoutDetails.hangtime,
           'gold'
         )}
       {timer_state.restTime &&
@@ -140,7 +165,7 @@ export default function App() {
           'Rest.',
           'restTime',
           'hangTime',
-          workout_details.resttime,
+          workoutDetails.resttime,
           'grey'
         )}
       {timer_state.breakTime &&
@@ -148,7 +173,7 @@ export default function App() {
           'Take a break!',
           'breakTime',
           'countdown',
-          workout_details.breaktime,
+          workoutDetails.breaktime,
           'purple'
         )}
       <View
@@ -168,6 +193,18 @@ export default function App() {
             marginVertical: 10,
           }}
         >
+          {visible && (
+            <>
+              <Text>Visible</Text>
+              <EditModal
+                visible={visible}
+                workout_details={workoutDetails}
+                cancel={toggleModal}
+                setWorkoutDetails={setWorkoutDetails}
+              />
+            </>
+          )}
+          <Button title='Edit' onPress={() => toggleModal()} />
           <Button
             title='Start'
             onPress={() => {
@@ -205,8 +242,8 @@ export default function App() {
             alignItems: 'center',
           }}
         >
-          <Text>{`${currentSet} / ${workout_details.totalSets}`}</Text>
-          <Text>{`${currentRep} / ${workout_details.reps}`}</Text>
+          <Text>{`${currentSet} / ${workoutDetails.totalSets}`}</Text>
+          <Text>{`${currentRep} / ${workoutDetails.reps}`}</Text>
         </View>
 
         {complete && (
