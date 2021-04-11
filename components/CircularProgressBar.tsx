@@ -54,13 +54,6 @@ export function CircularProgressBar(props: any) {
             strokeDashoffset,
           });
         }
-
-        // if (inputRef?.current) {
-        //   // inputRef.current.setNativeProps({
-        //   //   text: `${Math.round(v.value)}`,
-        //   // });
-        //   console.log(inputRef);
-        // }
       });
     }
     if (props.isPaused) {
@@ -77,7 +70,13 @@ export function CircularProgressBar(props: any) {
 
   function setTimer() {
     timer.current = setInterval(() => {
-      setDuration((prev: any) => prev - 1);
+      setDuration((prev: any) => {
+        if (prev - 1 >= 0) {
+          return prev - 1;
+        } else {
+          return 0;
+        }
+      });
     }, 1000);
   }
 
@@ -115,7 +114,6 @@ export function CircularProgressBar(props: any) {
       </Svg>
 
       <AnimatedInput
-        // ref={inputRef}
         underlineColorAndroid='transparent'
         editable={false}
         value={duration.toString()}

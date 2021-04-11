@@ -20,8 +20,8 @@ const workout_details = {
   countdown: 10,
   hangtime: 7,
   resttime: 3,
-  breaktime: 60,
-  totalSets: 2,
+  breaktime: 10,
+  totalSets: 1,
   reps: 3,
 };
 
