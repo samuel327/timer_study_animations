@@ -37,68 +37,58 @@ export default function App() {
     });
   }
 
-  return (
-    <View style={styles.container}>
-      {timer_state.countdown && (
-        <View style={{ backgroundColor: 'yellow', width: 300 }}>
-          <Text>Countdown</Text>
+  function displayHeaderAndCircle(
+    title: string,
+    prev: string,
+    next: string,
+    duration: number,
+    color: string
+  ) {
+    return (
+      <View style={styles.stateView}>
+        <View style={styles.headerView}>
+          <Text>{title}</Text>
+        </View>
+        <View>
           <CircularProgressBar
+            color={color}
             setDone={() => {
-              nextState('countdown', 'hangTime');
+              nextState(prev, next);
             }}
             workout_details={workout_details}
-            duration={workout_details.countdown}
+            duration={duration}
           />
         </View>
-      )}
-      {timer_state.hangTime && (
-        <View
-          style={{
-            backgroundColor: 'green',
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-          }}
-        >
-          <View style={{ marginBottom: 25, alignItems: 'center' }}>
-            <Text>Hang!</Text>
-          </View>
-          <View>
-            <CircularProgressBar
-              color="blue"
-              setDone={() => {
-                nextState('hangTime', 'restTime');
-              }}
-              workout_details={workout_details}
-              duration={workout_details.hangtime}
-            />
-          </View>
-        </View>
-      )}
-      {timer_state.restTime && (
-        <View
-          style={{
-            backgroundColor: 'orange',
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-          }}
-        >
-          <View style={{ marginBottom: 25, alignItems: 'center' }}>
-            <Text>Rest!</Text>
-          </View>
-          <View>
-            <CircularProgressBar
-              color="green"
-              setDone={() => {
-                nextState('restTime', 'hangTime');
-              }}
-              workout_details={workout_details}
-              duration={workout_details.resttime}
-            />
-          </View>
-        </View>
-      )}
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      {timer_state.countdown &&
+        displayHeaderAndCircle(
+          'Get Ready',
+          'countdown',
+          'hangTime',
+          workout_details.countdown,
+          'red'
+        )}
+      {timer_state.hangTime &&
+        displayHeaderAndCircle(
+          'Hang!',
+          'hangTime',
+          'restTime',
+          workout_details.hangtime,
+          'gold'
+        )}
+      {timer_state.restTime &&
+        displayHeaderAndCircle(
+          'Rest',
+          'restTime',
+          'hangTime',
+          workout_details.resttime,
+          'grey'
+        )}
     </View>
   );
 }
@@ -112,4 +102,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  stateView: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+  },
+  headerView: { marginBottom: 25, alignItems: 'center' },
 });
