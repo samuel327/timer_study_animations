@@ -10,12 +10,14 @@ import {
 } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
 export function CircularProgressBar(props: any) {
   const [percentage, setPercentage] = useState<number>(100);
+  const [duration, setDuration] = useState<any>(props?.duration);
   const radius = 100;
   const strokeWidth = 10;
-  const duration = 500;
+  //const duration = 500;
   const color = props.color || 'red';
   const delay = 0;
   const max = 100;
@@ -24,6 +26,7 @@ export function CircularProgressBar(props: any) {
   const circleCircumference = 2 * Math.PI * radius;
   const animatedValue = useRef(new Animated.Value(0)).current;
   const circleRef = useRef<any>();
+  const timer = useRef<any>(null);
   const animation = (toValue: any, duration: number) => {
     return Animated.timing(animatedValue, {
       toValue,
@@ -39,11 +42,9 @@ export function CircularProgressBar(props: any) {
   };
 
   useEffect(() => {
-    console.log(props.hasStarted, props.isPaused);
     if (props.hasStarted && !props.isPaused) {
-      console.log('PERCENTAGE: line 42', percentage);
       animation(percentage, props?.duration);
-
+      setTimer();
       animatedValue.addListener((v) => {
         if (circleRef?.current) {
           const maxPerc = (100 * v.value) / max;
@@ -53,6 +54,13 @@ export function CircularProgressBar(props: any) {
             strokeDashoffset,
           });
         }
+
+        // if (inputRef?.current) {
+        //   // inputRef.current.setNativeProps({
+        //   //   text: `${Math.round(v.value)}`,
+        //   // });
+        //   console.log(inputRef);
+        // }
       });
     }
     if (props.isPaused) {
@@ -66,6 +74,12 @@ export function CircularProgressBar(props: any) {
       animatedValue.removeAllListeners();
     };
   }, [props.hasStarted, props.isPaused]);
+
+  function setTimer() {
+    timer.current = setInterval(() => {
+      setDuration((prev: any) => prev - 1);
+    }, 1000);
+  }
 
   return (
     <View style={styles.container}>
@@ -99,10 +113,12 @@ export function CircularProgressBar(props: any) {
           />
         </G>
       </Svg>
-      <TextInput
+
+      <AnimatedInput
+        // ref={inputRef}
         underlineColorAndroid='transparent'
         editable={false}
-        defaultValue={'0'}
+        value={duration.toString()}
         style={[
           StyleSheet.absoluteFillObject,
           {

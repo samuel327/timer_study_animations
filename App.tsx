@@ -159,6 +159,19 @@ export default function App() {
               setHasStarted(false);
             }}
           />
+          {complete && (
+            <Button
+              title='Replay'
+              onPress={() => {
+                setCurrentRep(0);
+                setCurrentSet(1);
+                setIsPaused(false);
+                setHasStarted(true);
+                setComplete(false);
+                nextState('hangTime', 'countdown');
+              }}
+            />
+          )}
         </View>
 
         <View
