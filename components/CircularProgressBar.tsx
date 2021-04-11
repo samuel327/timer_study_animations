@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,7 +12,7 @@ import Svg, { Circle, G } from 'react-native-svg';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export function CircularProgressBar(props: any) {
-  const percentage = 100;
+  const [percentage, setPercentage] = useState<number>(100);
   const radius = 40;
   const strokeWidth = 10;
   const duration = 500;
@@ -31,12 +31,17 @@ export function CircularProgressBar(props: any) {
       delay,
       useNativeDriver: true,
     }).start(() => {
-      props?.setDone();
+      console.log(animatedValue, 'line 34');
+      if (Number.parseInt(JSON.stringify(animatedValue)) === 100) {
+        props.setDone();
+      }
     });
   };
 
   useEffect(() => {
-    if (props.hasStarted) {
+    console.log(props.hasStarted, props.isPaused);
+    if (props.hasStarted && !props.isPaused) {
+      console.log('PERCENTAGE: line 42', percentage);
       animation(percentage, props?.duration);
 
       animatedValue.addListener((v) => {
@@ -50,11 +55,17 @@ export function CircularProgressBar(props: any) {
         }
       });
     }
+    if (props.isPaused) {
+      animatedValue.stopAnimation((e) => {
+        console.log(e, 'line 58');
+        // setPercentage(e);
+      });
+    }
 
-    return () => {
-      animatedValue.removeAllListeners();
-    };
-  }, [props.hasStarted]);
+    // return () => {
+    //   animatedValue.removeAllListeners();
+    // };
+  }, [props.hasStarted, props.isPaused]);
 
   return (
     <View style={styles.container}>

@@ -30,6 +30,7 @@ export default function App() {
   const [currentSet, setCurrentSet] = useState(1);
   const [currentRep, setCurrentRep] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [complete, setComplete] = useState(false);
 
   function nextState(prevState: string, nextState: string) {
@@ -39,6 +40,10 @@ export default function App() {
       updated[nextState] = true;
       return updated;
     });
+  }
+
+  function reset() {
+    setTimerState({ ...countdownActive });
   }
 
   function determineNextState(prev: string, next: string) {
@@ -82,6 +87,7 @@ export default function App() {
             workout_details={workout_details}
             duration={duration}
             hasStarted={hasStarted}
+            isPaused={isPaused}
           />
         </View>
       </View>
@@ -127,17 +133,43 @@ export default function App() {
         style={{
           backgroundColor: 'grey',
           width: '100%',
-          height: 500,
+          height: 300,
           borderRadius: 5,
         }}
       >
-        <Button title='Start' onPress={() => setHasStarted(true)} />
+        <View style={{ flexDirection: 'row' }}>
+          <Button
+            title='Start'
+            onPress={() => {
+              setHasStarted(true);
+              setIsPaused(false);
+            }}
+          />
+          <Button
+            title='Restart'
+            onPress={() => {
+              setHasStarted(true);
+              setCurrentRep(0);
+              setCurrentSet(1);
+              setComplete(false);
+              setIsPaused(false);
+              reset();
+            }}
+          />
+          <Button
+            title='Pause'
+            onPress={() => {
+              setIsPaused(true);
+              setHasStarted(false);
+            }}
+          />
+        </View>
+
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center',
-            flex: 1,
           }}
         >
           <Text>{`${currentSet} / ${workout_details.totalSets}`}</Text>
@@ -145,12 +177,12 @@ export default function App() {
         </View>
 
         {complete && (
-          <View style={{ flex: 2 }}>
+          <View>
             <Text style={{ textAlign: 'center' }}>COMPLETE!</Text>
           </View>
         )}
         {!complete && (
-          <View style={{ flex: 2 }}>
+          <View>
             <Text style={{ textAlign: 'center' }}>Workout In-Progress!</Text>
           </View>
         )}
