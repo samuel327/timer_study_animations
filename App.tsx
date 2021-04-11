@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Button } from 'react-native';
 import { CircularProgressBar } from './components/CircularProgressBar';
-
+import { Audio } from 'expo-av';
 interface TIMER_STATES {
   [x: string]: boolean;
   countdown: boolean;
@@ -32,6 +32,29 @@ export default function App() {
   const [hasStarted, setHasStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [complete, setComplete] = useState(false);
+  /*sounds*/
+  const [beep_G2, setBeepG2] = useState<any>();
+  useEffect(() => {
+    console.log('GET G2!');
+    getG2();
+  }, []);
+
+  async function getG2() {
+    console.log('loading g2');
+    const { sound } = await Audio.Sound.createAsync(
+      require('./assets/sounds/beep_G2.wav')
+    );
+    setBeepG2(sound);
+  }
+
+  async function playG2() {
+    try {
+      await beep_G2.replayAsync();
+    } catch (e) {
+      console.log('STATUS: ', beep_G2.getStatusAsync());
+      console.log(e);
+    }
+  }
 
   function nextState(prevState: string, nextState: string) {
     setTimerState((prev: TIMER_STATES) => {
@@ -86,6 +109,7 @@ export default function App() {
             hasStarted={hasStarted}
             isPaused={isPaused}
             title={title}
+            playG2={playG2}
           />
         </View>
       </View>

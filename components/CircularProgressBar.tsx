@@ -8,7 +8,7 @@ import {
   TextInput,
   Button,
 } from 'react-native';
-import { Audio } from 'expo-av';
+
 import Svg, { Circle, G } from 'react-native-svg';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
@@ -29,8 +29,6 @@ export function CircularProgressBar(props: any) {
   const circleRef = useRef<any>();
   const timer = useRef<any>(null);
 
-  /*sounds*/
-  const [beep_G2, setBeepG2] = useState<any>();
   const animation = (toValue: any, duration: number) => {
     return Animated.timing(animatedValue, {
       toValue,
@@ -70,6 +68,7 @@ export function CircularProgressBar(props: any) {
 
     return () => {
       animatedValue.removeAllListeners();
+      clearInterval(timer.current);
     };
   }, [props.hasStarted, props.isPaused]);
 
@@ -77,8 +76,13 @@ export function CircularProgressBar(props: any) {
     timer.current = setInterval(() => {
       setDuration((prev: any) => {
         if (prev - 1 >= 0) {
-          return prev - 1;
+          let num = prev - 1;
+          if (num <= 3) {
+            props?.playG2();
+          }
+          return num;
         } else {
+          clearInterval(timer.current);
           return 0;
         }
       });
