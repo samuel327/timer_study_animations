@@ -46,6 +46,7 @@ export default function App() {
   const [currentRep, setCurrentRep] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isReset, setIsReset] = useState(false);
   const [complete, setComplete] = useState(false);
   const [visible, setVisible] = useState(false);
   /*sounds*/
@@ -134,6 +135,8 @@ export default function App() {
               //duration={workoutDetails[next]}
               hasStarted={hasStarted}
               isPaused={isPaused}
+              isReset={isReset}
+              setIsReset={setIsReset}
               title={title}
               playG2={playG2}
             />
@@ -220,6 +223,17 @@ export default function App() {
             onPress={() => {
               setIsPaused(true);
               setHasStarted(false);
+            }}
+          />
+          <Button
+            title='Reset'
+            onPress={() => {
+              setIsPaused(true);
+              setHasStarted(false);
+              setCurrentRep(0);
+              setCurrentSet(1);
+              setTimerState({ ...countdownActive });
+              setIsReset(true);
             }}
           />
           {complete && (

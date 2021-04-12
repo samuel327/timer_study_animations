@@ -58,6 +58,10 @@ export function CircularProgressBar(props: any) {
         }
       });
     }
+    if (props.isReset) {
+      animatedValue.setValue(0);
+      props.setIsReset(false);
+    }
     if (props.isPaused) {
       animatedValue.stopAnimation((e) => {
         clearInterval(timer.current);
@@ -72,7 +76,7 @@ export function CircularProgressBar(props: any) {
       animatedValue.removeAllListeners();
       clearInterval(timer.current);
     };
-  }, [props.hasStarted, props.isPaused, props?.duration]);
+  }, [props.hasStarted, props.isPaused, props?.duration, props?.isReset]);
 
   function setTimer() {
     timer.current = setInterval(() => {
