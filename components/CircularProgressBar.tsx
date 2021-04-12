@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import Svg, { Circle, G } from 'react-native-svg';
+import { AppColors } from '../constants/AppColors';
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
@@ -92,7 +93,7 @@ export function CircularProgressBar(props: any) {
 
   return (
     <View style={styles.container}>
-      {props?.title && <Text>{props.title}</Text>}
+      {props?.title && <Text style={styles.title}>{props.title}</Text>}
       <Svg
         width={radius * 2}
         height={radius * 2}
@@ -131,7 +132,7 @@ export function CircularProgressBar(props: any) {
           StyleSheet.absoluteFillObject,
           {
             fontSize: radius / 2,
-            color: textColor ?? 'blue',
+            color: AppColors.accent,
             fontWeight: 'bold',
             textAlign: 'center',
           },
@@ -149,6 +150,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
     width: '100%',
     height: '100%',
+    backgroundColor: AppColors.primary,
   },
   txtInput: {},
+  title: {
+    color: AppColors.accent,
+    fontSize: 20,
+  },
 });

@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, Button } from 'react-native';
 import { CircularProgressBar } from './components/CircularProgressBar';
 import { Audio } from 'expo-av';
 import { EditModal } from './components/EditModal';
+import { AppColors } from './constants/AppColors';
 interface TIMER_STATES {
   [x: string]: boolean;
   countdown: boolean;
@@ -147,11 +148,11 @@ export default function App() {
       {complete && <Text>COMPLETE!</Text>}
       {timer_state.countdown &&
         displayHeaderAndCircle(
-          'Get Ready',
+          'Get Ready!',
           'countdown',
           'hangTime',
           workoutDetails.countdown,
-          'red'
+          AppColors.accent
         )}
       {timer_state.hangTime &&
         displayHeaderAndCircle(
