@@ -50,13 +50,10 @@ export default function App() {
   /*sounds*/
   const [beep_G2, setBeepG2] = useState<any>();
   useEffect(() => {
-    console.log('GET G2!');
     getG2();
-    console.log('APP: ', workoutDetails);
-  }, [workoutDetails]);
+  }, []);
 
   async function getG2() {
-    console.log('loading g2');
     const { sound } = await Audio.Sound.createAsync(
       require('./assets/sounds/beep_G2.wav')
     );
@@ -67,7 +64,6 @@ export default function App() {
     try {
       await beep_G2.replayAsync();
     } catch (e) {
-      console.log('STATUS: ', beep_G2.getStatusAsync());
       console.log(e);
     }
   }
@@ -76,6 +72,11 @@ export default function App() {
     setIsPaused(true);
     setHasStarted(false);
     setVisible(!visible);
+  }
+
+  function onSave(updatedWorkoutDetails: Workout_Details_Props) {
+    setWorkoutDetails(updatedWorkoutDetails);
+    toggleModal();
   }
 
   function nextState(prevState: string, nextState: string) {
@@ -200,7 +201,7 @@ export default function App() {
                 visible={visible}
                 workout_details={workoutDetails}
                 cancel={toggleModal}
-                setWorkoutDetails={setWorkoutDetails}
+                save={onSave}
               />
             </>
           )}

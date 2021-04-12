@@ -36,7 +36,6 @@ export function CircularProgressBar(props: any) {
       delay,
       useNativeDriver: true,
     }).start(() => {
-      console.log(animatedValue, 'line 34');
       if (Number.parseInt(JSON.stringify(animatedValue)) === 100) {
         props.setDone();
       }
@@ -60,13 +59,11 @@ export function CircularProgressBar(props: any) {
     }
     if (props.isPaused) {
       animatedValue.stopAnimation((e) => {
-        console.log(e, 'line 58');
-        // setPercentage(e);
         clearInterval(timer.current);
       });
     }
-    console.log(props?.duration);
-    if (props?.duration !== duration) {
+
+    if (props?.duration !== duration && props.isPaused) {
       setDuration(props?.duration);
       animatedValue.setValue(0);
     }

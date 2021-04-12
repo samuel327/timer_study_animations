@@ -6,10 +6,10 @@ interface EditModalProps {
   visible: boolean;
   workout_details: Workout_Details_Props;
   cancel: () => void;
-  setWorkoutDetails: Dispatch<SetStateAction<Workout_Details_Props>>;
+  save: (details: Workout_Details_Props) => void;
 }
 export const EditModal = (props: EditModalProps) => {
-  const { cancel, visible, workout_details, setWorkoutDetails } = props;
+  const { cancel, visible, workout_details, save } = props;
 
   const [
     modalWorkoutDetails,
@@ -25,7 +25,7 @@ export const EditModal = (props: EditModalProps) => {
             setModalWorkoutDetails((prev: Workout_Details_Props) => {
               let updated = { ...prev };
               updated[field] = Number(text);
-              console.log(updated);
+
               return updated;
             });
           }}
@@ -47,12 +47,7 @@ export const EditModal = (props: EditModalProps) => {
         {displayInputSection('total sets', 'totalSets')}
         {displayInputSection('reps', 'reps')}
         <Button title='Cancel' onPress={cancel} />
-        <Button
-          title='Save'
-          onPress={() => {
-            setWorkoutDetails(modalWorkoutDetails);
-          }}
-        />
+        <Button title='Save' onPress={() => save(modalWorkoutDetails)} />
       </View>
     </Modal>
   );
