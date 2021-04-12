@@ -10,12 +10,14 @@ interface TIMER_STATES {
   hangTime: boolean;
   restTime: boolean;
   breakTime: boolean;
+  reset: boolean;
 }
 const countdownActive: TIMER_STATES = {
   countdown: true,
   hangTime: false,
   restTime: false,
   breakTime: false,
+  reset: false,
 };
 
 export interface Workout_Details_Props {
@@ -135,8 +137,6 @@ export default function App() {
               //duration={workoutDetails[next]}
               hasStarted={hasStarted}
               isPaused={isPaused}
-              isReset={isReset}
-              setIsReset={setIsReset}
               title={title}
               playG2={playG2}
             />
@@ -181,6 +181,14 @@ export default function App() {
           workoutDetails.breaktime,
           'purple'
         )}
+      {timer_state.reset &&
+        displayHeaderAndCircle(
+          'Get Ready!',
+          'countdown',
+          'hangTime',
+          workoutDetails.countdown,
+          AppColors.accent
+        )}
       <View
         style={{
           backgroundColor: 'grey',
@@ -210,13 +218,25 @@ export default function App() {
             </>
           )}
           <Button title='Edit' onPress={() => toggleModal()} />
-          <Button
-            title='Start'
-            onPress={() => {
-              setHasStarted(true);
-              setIsPaused(false);
-            }}
-          />
+          {!hasStarted && (
+            <Button
+              title='Start'
+              onPress={() => {
+                setTimerState({ ...countdownActive });
+                setHasStarted(true);
+                setIsPaused(false);
+              }}
+            />
+          )}
+          {isPaused && (
+            <Button
+              title='resume'
+              onPress={() => {
+                setHasStarted(true);
+                setIsPaused(false);
+              }}
+            />
+          )}
 
           <Button
             title='Pause'
@@ -229,11 +249,15 @@ export default function App() {
             title='Reset'
             onPress={() => {
               setIsPaused(true);
-              setHasStarted(false);
               setCurrentRep(0);
               setCurrentSet(1);
-              setTimerState({ ...countdownActive });
-              setIsReset(true);
+              setTimerState({
+                countdown: false,
+                hangTime: false,
+                restTime: false,
+                breakTime: false,
+                reset: true,
+              });
             }}
           />
           {complete && (

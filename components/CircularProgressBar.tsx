@@ -58,10 +58,6 @@ export function CircularProgressBar(props: any) {
         }
       });
     }
-    if (props.isReset) {
-      animatedValue.setValue(0);
-      props.setIsReset(false);
-    }
     if (props.isPaused) {
       animatedValue.stopAnimation((e) => {
         clearInterval(timer.current);
@@ -69,14 +65,14 @@ export function CircularProgressBar(props: any) {
     }
 
     if (props?.duration !== duration && props.isPaused) {
-      setDuration(props?.duration);
-      animatedValue.setValue(0);
+      // setDuration(props?.duration);
+      // animatedValue.setValue(0);
     }
     return () => {
       animatedValue.removeAllListeners();
       clearInterval(timer.current);
     };
-  }, [props.hasStarted, props.isPaused, props?.duration, props?.isReset]);
+  }, [props.hasStarted, props.isPaused, props?.duration]);
 
   function setTimer() {
     timer.current = setInterval(() => {
