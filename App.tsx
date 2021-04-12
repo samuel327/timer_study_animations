@@ -10,14 +10,22 @@ interface TIMER_STATES {
   hangTime: boolean;
   restTime: boolean;
   breakTime: boolean;
+  reset: boolean;
 }
 const countdownActive: TIMER_STATES = {
   countdown: true,
   hangTime: false,
   restTime: false,
   breakTime: false,
+  reset: false,
 };
-
+const resetState: TIMER_STATES = {
+  countdown: false,
+  hangTime: false,
+  restTime: false,
+  breakTime: false,
+  reset: true,
+};
 export interface Workout_Details_Props {
   [x: string]: number;
   countdown: number;
@@ -178,6 +186,8 @@ export default function App() {
           workoutDetails.breaktime,
           'purple'
         )}
+      {timer_state.reset &&
+        displayHeaderAndCircle('reset!', 'reset', 'countdown', 0, 'purple')}
       <View
         style={{
           backgroundColor: 'grey',
@@ -220,6 +230,15 @@ export default function App() {
             onPress={() => {
               setIsPaused(true);
               setHasStarted(false);
+            }}
+          />
+
+          <Button
+            title='Reset'
+            onPress={() => {
+              setIsPaused(true);
+              setHasStarted(false);
+              setTimerState({ ...resetState });
             }}
           />
           {complete && (

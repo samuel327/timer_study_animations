@@ -65,8 +65,8 @@ export function CircularProgressBar(props: any) {
     }
 
     if (props?.duration !== duration && props.isPaused) {
-      setDuration(props?.duration);
-      animatedValue.setValue(0);
+      //setDuration(props?.duration);
+      // animatedValue.setValue(0);
     }
     return () => {
       animatedValue.removeAllListeners();
