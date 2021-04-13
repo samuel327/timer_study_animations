@@ -75,11 +75,14 @@ export function CircularProgressBar(props: any) {
   }, [props.hasStarted, props.isPaused, props?.duration]);
 
   function setTimer() {
+    props.playC3();
     timer.current = setInterval(() => {
       setDuration((prev: any) => {
+        if (prev === props.duration) {
+        }
         if (prev - 1 >= 0) {
           let num = prev - 1;
-          if (num <= 3) {
+          if (num <= 2) {
             props?.playG2();
           }
           return num;

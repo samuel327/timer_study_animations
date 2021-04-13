@@ -51,8 +51,10 @@ export default function App() {
   const [visible, setVisible] = useState(false);
   /*sounds*/
   const [beep_G2, setBeepG2] = useState<any>();
+  const [beep_C3, setBeepC3] = useState<any>();
   useEffect(() => {
     getG2();
+    getC3();
   }, []);
 
   async function getG2() {
@@ -62,9 +64,24 @@ export default function App() {
     setBeepG2(sound);
   }
 
+  async function getC3() {
+    const { sound } = await Audio.Sound.createAsync(
+      require('./assets/sounds/beep_C3.wav')
+    );
+    setBeepC3(sound);
+  }
+
   async function playG2() {
     try {
       await beep_G2.replayAsync();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function playC3() {
+    try {
+      await beep_C3.replayAsync();
     } catch (e) {
       console.log(e);
     }
@@ -137,6 +154,7 @@ export default function App() {
               isPaused={isPaused}
               title={title}
               playG2={playG2}
+              playC3={playC3}
             />
           </View>
         </View>
