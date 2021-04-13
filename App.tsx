@@ -4,6 +4,7 @@ import { CircularProgressBar } from './components/CircularProgressBar';
 import { Audio } from 'expo-av';
 import { EditModal } from './components/EditModal';
 import { AppColors } from './constants/AppColors';
+import { Header } from './components/Header';
 interface TIMER_STATES {
   [x: string]: boolean;
   countdown: boolean;
@@ -144,128 +145,123 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      {complete && <Text>COMPLETE!</Text>}
-      {timer_state.countdown &&
-        displayHeaderAndCircle(
-          'Get Ready!',
-          'countdown',
-          'hangTime',
-          workoutDetails.countdown,
-          AppColors.accent
-        )}
-      {timer_state.hangTime &&
-        displayHeaderAndCircle(
-          'Hang!',
-          'hangTime',
-          'restTime',
-          workoutDetails.hangtime,
-          'gold'
-        )}
-      {timer_state.restTime &&
-        displayHeaderAndCircle(
-          'Rest.',
-          'restTime',
-          'hangTime',
-          workoutDetails.resttime,
-          'grey'
-        )}
-      {timer_state.breakTime &&
-        displayHeaderAndCircle(
-          'Take a break!',
-          'breakTime',
-          'countdown',
-          workoutDetails.breaktime,
-          'purple'
-        )}
-      <View
-        style={{
-          backgroundColor: 'grey',
-          width: '100%',
-          height: 300,
-          borderRadius: 5,
-        }}
-      >
+    <>
+      <Header
+        workoutDetails={workoutDetails}
+        currentSet={currentSet}
+        currentRep={currentRep}
+      />
+      <View style={styles.container}>
+        {timer_state.countdown &&
+          displayHeaderAndCircle(
+            'Get Ready!',
+            'countdown',
+            'hangTime',
+            workoutDetails.countdown,
+            AppColors.accent
+          )}
+        {timer_state.hangTime &&
+          displayHeaderAndCircle(
+            'Hang!',
+            'hangTime',
+            'restTime',
+            workoutDetails.hangtime,
+            'gold'
+          )}
+        {timer_state.restTime &&
+          displayHeaderAndCircle(
+            'Rest.',
+            'restTime',
+            'hangTime',
+            workoutDetails.resttime,
+            'grey'
+          )}
+        {timer_state.breakTime &&
+          displayHeaderAndCircle(
+            'Take a break!',
+            'breakTime',
+            'countdown',
+            workoutDetails.breaktime,
+            'purple'
+          )}
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-
-            justifyContent: 'center',
-            marginVertical: 10,
+            backgroundColor: 'grey',
+            width: '100%',
+            height: 300,
+            borderRadius: 5,
           }}
         >
-          {visible && (
-            <>
-              <Text>Visible</Text>
-              <EditModal
-                visible={visible}
-                workout_details={workoutDetails}
-                cancel={toggleModal}
-                save={onSave}
-              />
-            </>
-          )}
-          <Button title='Edit' onPress={() => toggleModal()} />
-          <Button
-            title='Start'
-            onPress={() => {
-              setHasStarted(true);
-              setIsPaused(false);
-            }}
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
 
-          <Button
-            title='Pause'
-            onPress={() => {
-              setIsPaused(true);
-              setHasStarted(false);
+              justifyContent: 'center',
+              marginVertical: 10,
             }}
-          />
-          {complete && (
+          >
+            {visible && (
+              <>
+                <Text>Visible</Text>
+                <EditModal
+                  visible={visible}
+                  workout_details={workoutDetails}
+                  cancel={toggleModal}
+                  save={onSave}
+                />
+              </>
+            )}
+            <Button title='Edit' onPress={() => toggleModal()} />
             <Button
-              title='Replay'
+              title='Start'
               onPress={() => {
-                setCurrentRep(0);
-                setCurrentSet(1);
-                setIsPaused(false);
                 setHasStarted(true);
-                setComplete(false);
-                nextState('hangTime', 'countdown');
+                setIsPaused(false);
               }}
             />
+
+            <Button
+              title='Pause'
+              onPress={() => {
+                setIsPaused(true);
+                setHasStarted(false);
+              }}
+            />
+            {complete && (
+              <Button
+                title='Replay'
+                onPress={() => {
+                  setCurrentRep(0);
+                  setCurrentSet(1);
+                  setIsPaused(false);
+                  setHasStarted(true);
+                  setComplete(false);
+                  nextState('hangTime', 'countdown');
+                }}
+              />
+            )}
+          </View>
+
+          {complete && (
+            <View>
+              <Text style={styles.txt}>COMPLETE!</Text>
+            </View>
+          )}
+          {!complete && (
+            <View>
+              <Text style={styles.txt}>Workout In-Progress!</Text>
+            </View>
           )}
         </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}
-        >
-          <Text>{`${currentSet} / ${workoutDetails.totalSets}`}</Text>
-          <Text>{`${currentRep} / ${workoutDetails.reps}`}</Text>
-        </View>
-
-        {complete && (
-          <View>
-            <Text style={{ textAlign: 'center' }}>COMPLETE!</Text>
-          </View>
-        )}
-        {!complete && (
-          <View>
-            <Text style={{ textAlign: 'center' }}>Workout In-Progress!</Text>
-          </View>
-        )}
       </View>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
@@ -276,5 +272,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'center',
+  },
+  txt: {
+    fontSize: 20,
+    color: AppColors.accent,
+    textAlign: 'center',
   },
 });
